@@ -16,8 +16,8 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 # Dados do email - configure aqui
-EMAIL_REMETENTE = 'seuemail@gmail.com'
-SENHA_REMETENTE = 'sua_senha_de_app_aqui'
+EMAIL_REMETENTE = 'rastreadordepreco@gmail.com'
+SENHA_REMETENTE = 'Rad@2025'
 EMAIL_DESTINATARIO = 'destinatario@example.com'
 
 def enviar_email_alerta(nome, url, preco_atual, precoDesejado, email_usuario):
@@ -174,6 +174,3 @@ if __name__ == '__main__':
             print("⚠️ Preço não encontrado.")
     except Exception as e:
         print(f"❌ Erro: {e}")
-
-
-
