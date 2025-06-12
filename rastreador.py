@@ -94,7 +94,7 @@ def salvar_preco_em_db(nome, url, preco, precoDesejado, email):
             nome TEXT,
             url TEXT,
             preco REAL,
-            precoDesejado TEXT,
+            precoDesejado REAL,
             email TEXT,
             data TEXT
         )
