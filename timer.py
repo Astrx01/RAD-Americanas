@@ -36,7 +36,7 @@ def verificar_precos():
             print(f"❌ Erro ao verificar {nome}: {e}")
 
 # Agende a verificação a cada 6 horas
-schedule.every(30).minutes.do(verificar_precos)
+schedule.every(5).minutes.do(verificar_precos)
 
 print("🔁 Iniciando o monitoramento a cada 6 horas...")
 

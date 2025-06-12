@@ -8,6 +8,7 @@
 <body>
     <div class="container mt-5">
         {% block content %}
+        <a href="{{ url_for('index') }}" class="btn btn-secondary ms-2">Início</a>
         <h2 class="mb-4">Relatório de Preços dos Produtos</h2>
         {% for nome, consultas in produtos.items() %}
         <div class="card mb-4">
