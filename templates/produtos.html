@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Produtos Monitorados{% endblock %}</title>
+</head>
+<body>
+    {% extends "base.html" %}
+    {% block content %}
+    <h2 class="mb-4">Produtos Monitorados</h2>
+    <a class="btn btn-light me-2" href="{{ url_for('listar_produtos') }}">Produtos Monitorados</a>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>URL</th>
+                <th>Preço Desejado</th>
+                <th>E-mail</th>
+                <th>Última Consulta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for nome, url, preco, email, data in produtos %}
+            <tr>
+                <td>{{ nome }}</td>
+                <td><a href="{{ url }}" target="_blank">{{ url }}</a></td>
+                <td>R$ {{ "%.2f"|format(preco) }}</td>
+                <td>{{ email }}</td>
+                <td>{{ data }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endblock %}
+</body>
+</html>

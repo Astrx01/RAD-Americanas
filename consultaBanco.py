@@ -8,12 +8,15 @@ conn = sqlite3.connect(caminho_banco)
 cursor = conn.cursor()
 
 # Consulta os dados da tabela
-cursor.execute('SELECT * FROM precos')
+cursor.execute('SELECT id, nome, preco FROM precos')
 registros = cursor.fetchall()
 
-# Exibe os dados
+# Exibe o relatório formatado
+print(f"{'ID':<5} {'Produto':<30} {'Preço':>10}")
+print('-' * 50)
 for registro in registros:
-    print(registro)
+    id, nome, preco = registro
+    print(f"{id:<5} {nome:<30} R$ {preco:>8.2f}")
 
 # Fecha a conexão
 conn.close()

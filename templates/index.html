@@ -1,10 +1,8 @@
-
-<!DOCTYPE html>
-<html>
-<head><title>Rastreador de Preços</title></head>
-<body>
-  <h1>🔍 Rastreador de Preços</h1>
-  <p><a href="{{ url_for('adicionar_produto') }}">➕ Adicionar Produto</a></p>
-  <p><a href="{{ url_for('listar_produtos') }}">📄 Ver Produtos Monitorados</a></p>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Início - Rastreador de Preços{% endblock %}
+{% block content %}
+  <div class="text-center mt-5">
+    <h1 class="display-4">🔍 Rastreador de Preços</h1>
+    <p class="lead">Monitore e acompanhe os preços dos seus produtos favoritos!</p>
+  </div>
+{% endblock %}
