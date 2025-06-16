@@ -16,16 +16,22 @@
                 <th>Preço Desejado</th>
                 <th>E-mail</th>
                 <th>Última Consulta</th>
+                <th>Excluir</th>
             </tr>
         </thead>
         <tbody>
-            {% for nome, url, preco, email, data in produtos %}
+            {% for produto in produtos %}
             <tr>
-                <td>{{ nome }}</td>
-                <td><a href="{{ url }}" target="_blank">{{ url }}</a></td>
-                <td>R$ {{ "%.2f"|format(preco) }}</td>
-                <td>{{ email }}</td>
-                <td>{{ data }}</td>
+                <td>{{ produto[0] }}</td>
+                <td><a href="{{ produto[1] }}" target="_blank">{{ produto[1] }}</a></td>
+                <td>R$ {{ "%.2f"|format(produto[2]) }}</td>
+                <td>{{ produto[3] }}</td>
+                <td>{{ produto[4] }}</td>
+                <td>
+                    <form action="{{ url_for('deletar_produto', nome=produto[0]) }}" method="post" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

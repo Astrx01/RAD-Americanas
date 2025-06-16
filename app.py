@@ -47,6 +47,29 @@ def adicionar_produto():
 
     return render_template('adicionar.html')
 
+# --- NOVA ROTA PARA DELETAR ---
+@app.route('/deletar/<path:nome>', methods=['POST'])
+def deletar_produto(nome):
+    """
+    Deleta um produto e todo o seu histórico de preços do banco de dados.
+    Usa o método POST por segurança, para evitar exclusão acidental por crawlers.
+    """
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        # Deleta todos os registros com o nome do produto especificado
+        cursor.execute("DELETE FROM precos WHERE nome = ?", (nome,))
+        conn.commit()
+        flash(f'Produto "{nome}" e seu histórico foram deletados com sucesso!', 'success')
+    except sqlite3.Error as e:
+        flash(f'Erro ao deletar o produto do banco de dados: {e}', 'danger')
+    finally:
+        if conn:
+            conn.close()
+            
+    return redirect(url_for('listar_produtos'))
+
+
 @app.route('/relatorio')
 def relatorio():
     conn = sqlite3.connect('db/precos.db')
