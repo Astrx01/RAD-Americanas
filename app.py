@@ -8,6 +8,7 @@ app.secret_key = 'chave-secreta'
 app.secret_key = os.urandom(24)  # Chave secreta para a sessão
 
 DB_PATH = 'db/precos.db'# Dados de exemplo para autenticação (substitua por um banco de dados)
+
 USUARIOS = {
     'admin': 'senha123'
 }
