@@ -1,15 +1,75 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import sqlite3
 from rastreador import get_info_americanas, salvar_preco_em_db
+import  os
 
 app = Flask(__name__)
 app.secret_key = 'chave-secreta'
+app.secret_key = os.urandom(24)  # Chave secreta para a sessão
 
-DB_PATH = 'db/precos.db'
+DB_PATH = 'db/precos.db'# Dados de exemplo para autenticação (substitua por um banco de dados)
+USUARIOS = {
+    'admin': 'senha123'
+}
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if username in USUARIOS:
+            flash('Nome de usuário já está em uso.', 'danger')
+            return render_template('register.html')
+
+        USUARIOS[username] = password  # Armazena o usuário e senha
+        flash('Cadastro realizado com sucesso! Faça login.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if username in USUARIOS and USUARIOS[username] == password:
+            session['username'] = username
+            flash('Login realizado com sucesso!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Usuário ou senha incorretos.', 'danger')
+            return render_template('login.html')
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    flash('Logout realizado com sucesso!', 'info')
+    return redirect(url_for('index'))
+
+
+# Decorator para verificar se o usuário está logado
+def login_required(f):
+    def decorated_function(*args, **kwargs):
+        if session.get('username') is None:
+            flash('Por favor, faça login para acessar esta página.', 'warning')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    decorated_function.__name__ = f.__name__
+    return decorated_function
+
+
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/produtos')
 def listar_produtos():

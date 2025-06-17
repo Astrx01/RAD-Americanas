@@ -12,7 +12,17 @@
             <div>
                 <a class="btn btn-light me-2" href="{{ url_for('adicionar_produto') }}">Adicionar Produto</a>
                 <a class="btn btn-light me-2" href="{{ url_for('listar_produtos') }}">Produtos Monitorados</a>
-                <a class="btn btn-light" href="{{ url_for('relatorio') }}">Relatório de Preços</a>
+                <a class="btn btn-light me-2" href="{{ url_for('relatorio') }}">Relatório de Preços</a>
+
+                {% if session['username'] %}
+                    <span class="text-light me-2">
+                        Bem-vindo, {{ session['username'] }}!
+                    </span>
+                    <a class="btn btn-light" href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a class="btn btn-light me-2" href="{{ url_for('login') }}">Login</a>
+                    <a class="btn btn-light" href="{{ url_for('register') }}">Cadastrar</a>
+                {% endif %}
             </div>
         </div>
     </nav>
