@@ -7,7 +7,7 @@
     {% extends "base.html" %}
     {% block content %}
     <h2 class="mb-4">Produtos Monitorados</h2>
-    <a class="btn btn-light me-2" href="{{ url_for('listar_produtos') }}">Produtos Monitorados</a>
+    <a class="btn btn-light me-2" href="{{ url_for('listar_produtos') }}">Clique para iniciar o Timer de preços!</a>
 
     <!-- Botão para iniciar o timer -->
     <form action="{{ url_for('iniciar_timer') }}" method="post" style="display:inline;">
