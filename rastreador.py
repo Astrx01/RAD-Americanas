@@ -23,13 +23,24 @@ EMAIL_DESTINATARIO = 'destinatario@example.com'
 def enviar_email_alerta(nome, url, preco_atual, precoDesejado, email_usuario):
     assunto = f"Alerta de preço: {nome}"
     corpo = f"""
-    <p>O preço do produto <b>{nome}</b> caiu para <b>R${preco_atual:.2f}</b>.</p>
-    <p>Seu preço desejado era: R${precoDesejado}</p>
-    <p>Confira no link: <a href="{url}">{url}</a></p>
+    <div style="font-family: Arial, sans-serif; background: #f6f8fa; padding: 24px;">
+        <div style="max-width: 500px; margin: auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #eee; padding: 24px;">
+            <h2 style="color: #d7263d; text-align: center;">Rastreador de Preços!</h2>
+            <p style="font-size: 18px; color: #222;">O preço do produto <b>{nome}</b> caiu!</p>
+            <div style="background: #eafaf1; border-radius: 6px; padding: 16px; margin: 16px 0; text-align: center;">
+                <span style="font-size: 16px; color: #555;">Preço atual:</span><br>
+                <span style="font-size: 32px; color: #27ae60; font-weight: bold;">R$ {preco_atual:.2f}</span>
+            </div>
+            <p style="font-size: 16px; color: #555;">Seu preço desejado era: <b>R$ {precoDesejado}</b></p>
+            <a href="{url}" style="display: inline-block; background: #d7263d; color: #fff; padding: 12px 24px; border-radius: 4px; text-decoration: none; font-weight: bold; margin-top: 16px;">Ver Produto</a>
+            <hr style="margin: 24px 0;">
+            <p style="font-size: 12px; color: #aaa; text-align: center;">Você está recebendo este alerta porque cadastrou este produto no Rastreador de Preços.</p>
+        </div>
+    </div>
     """
 
     msg = MIMEMultipart()
-    msg['From'] = EMAIL_REMETENTE
+    msg['From'] = f'Rastreador de Preços! <{EMAIL_REMETENTE}>'
     msg['To'] = email_usuario  # envia para o email fornecido
     msg['Subject'] = assunto
     msg.attach(MIMEText(corpo, 'html'))

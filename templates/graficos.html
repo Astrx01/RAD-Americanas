@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Gráficos de Preços</h2>
-    {% if graficos_html %}
-        {% for nome, grafico in graficos_html.items() %}
-            <h3>{{ nome }}</h3>
+<h2>Gráficos de Preços dos Produtos</h2>
+{% for nome, grafico in graficos_html.items() %}
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">{{ nome }}</h5>
+        </div>
+        <div class="card-body">
             {{ grafico|safe }}
-        {% endfor %}
-    {% else %}
-        <p>Nenhum dado disponível para gerar gráficos.</p>
-    {% endif %}
+        </div>
+    </div>
+{% endfor %}
 {% endblock %}

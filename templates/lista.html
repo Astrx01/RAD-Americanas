@@ -8,7 +8,13 @@
     {% block content %}
     <h2 class="mb-4">Produtos Monitorados</h2>
     <a class="btn btn-light me-2" href="{{ url_for('listar_produtos') }}">Produtos Monitorados</a>
-  <table class="table">
+
+    <!-- Botão para iniciar o timer -->
+    <form action="{{ url_for('iniciar_timer') }}" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-success mb-3">Iniciar Timer</button>
+    </form>
+
+    <table class="table">
         <thead>
             <tr>
                 <th>Nome</th>
@@ -26,15 +32,21 @@
                 <td>{{ produto[1] }}</td>
                 <td><a href="{{ produto[2] }}" target="_blank">Link</a></td>
                 <td>
-                    {% if produto[2] is number %}
-                        R$ {{ "%.2f"|format(produto[2]) }}
+                    {% if produto[3] is number %}
+                        R$ {{ "%.2f"|format(produto[3]) }}
                     {% else %}
                         Valor Inválido
                     {% endif %}
                 </td>
-                <td>{{ produto[3] }}</td>
-                <td>{{ produto[4] }}</td>
+                <td>
+                    {% if produto[4] is number %}
+                        R$ {{ "%.2f"|format(produto[4]) }}
+                    {% else %}
+                        Valor Inválido
+                    {% endif %}
+                </td>
                 <td>{{ produto[5] }}</td>
+                <td>{{ produto[6] }}</td>
                 <td>
                     <a href="{{ url_for('editar_produto', produto_id=produto[0]) }}" class="btn btn-sm btn-primary">Editar</a>
                     <form action="{{ url_for('deletar_produto', nome=produto[1]) }}" method="post" style="display: inline;">

@@ -5,6 +5,7 @@ from rastreador import get_info_americanas, salvar_preco_em_db
 from werkzeug.security import generate_password_hash, check_password_hash
 import plotly.graph_objects as go
 from plotly.offline import plot
+import subprocess
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -51,7 +52,7 @@ criar_tabela_precos()
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        email = request.form['email']  # Adicionado
+        email = request.form['email']
         password = request.form['password']
 
         conn = sqlite3.connect(DB_PATH)
@@ -213,18 +214,28 @@ def deletar_produto(nome):
 @app.route('/relatorio')
 @login_required
 def relatorio():
-    conn = sqlite3.connect('db/precos.db')
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    user_id = session['user_id']
-    cursor.execute('SELECT nome, preco, data FROM precos WHERE user_id = ? ORDER BY nome, data DESC', (user_id,))
-    registros = cursor.fetchall()
+    cursor.execute("""
+        SELECT nome, preco, data
+        FROM precos
+        ORDER BY nome, data DESC
+    """)
+    rows = cursor.fetchall()
     conn.close()
 
+    # Agrupa por nome do produto
     produtos = {}
-    for nome, preco, data in registros:
+    for row in rows:
+        nome = row['nome']
+        consulta = {
+            'preco': row['preco'],
+            'data': row['data']
+        }
         if nome not in produtos:
             produtos[nome] = []
-        produtos[nome].append({'preco': preco, 'data': data})
+        produtos[nome].append(consulta)
 
     return render_template('relatorio.html', produtos=produtos)
 
@@ -249,28 +260,21 @@ def editar_produto(produto_id):
 @app.route('/atualizar/<int:produto_id>', methods=['POST'])
 @login_required
 def atualizar_produto(produto_id):
-    if request.method == 'POST':
-        nome = request.form['nome']
-        url = request.form['url']
-        preco_desejado = request.form['preco_desejado']
-        email = request.form['email']
-        user_id = session['user_id']
+    nome = request.form['nome']
+    url = request.form['url']
+    preco_desejado = request.form['preco_desejado']
+    email = request.form['email']
 
-        conn = sqlite3.connect(DB_PATH)
-        cursor = conn.cursor()
-        try:
-            cursor.execute("""
-                UPDATE precos
-                SET nome = ?, url = ?, precoDesejado = ?, email = ?
-                WHERE id = ? AND user_id = ?
-            """, (nome, url, preco_desejado, email, produto_id, user_id))
-            conn.commit()
-            flash('Produto atualizado com sucesso!', 'success')
-        except sqlite3.Error as e:
-            flash(f'Erro ao atualizar o produto: {e}', 'danger')
-        finally:
-            conn.close()
-
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE precos
+        SET nome = ?, url = ?, precoDesejado = ?, email = ?
+        WHERE id = ?
+    """, (nome, url, preco_desejado, email, produto_id))
+    conn.commit()
+    conn.close()
+    flash('Produto atualizado com sucesso!', 'success')
     return redirect(url_for('listar_produtos'))
 
 @app.route('/graficos')
@@ -278,23 +282,34 @@ def atualizar_produto(produto_id):
 def graficos():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    user_id = session['user_id']
-    cursor.execute('SELECT nome, preco, data FROM precos WHERE user_id = ? ORDER BY nome, data DESC', (user_id,))
-    registros = cursor.fetchall()
+    cursor.execute("""
+        SELECT nome, preco, data
+        FROM precos
+        ORDER BY nome, data
+    """)
+    rows = cursor.fetchall()
     conn.close()
 
+    # Organiza os dados por produto
     produtos = {}
-    for nome, preco, data in registros:
+    for nome, preco, data in rows:
         if nome not in produtos:
-            produtos[nome] = {'precos': [], 'datas': []}
-        produtos[nome]['precos'].append(preco)
+            produtos[nome] = {'datas': [], 'precos': []}
         produtos[nome]['datas'].append(data)
+        produtos[nome]['precos'].append(preco)
 
-    # Gerar gráficos para cada produto
+    # Gera um gráfico Plotly para cada produto
+    from plotly.offline import plot
+    import plotly.graph_objs as go
     graficos_html = {}
-    for nome, dados in produtos.items():
-        fig = go.Figure(data=[go.Scatter(x=dados['datas'], y=dados['precos'], mode='lines+markers')])
-        fig.update_layout(title=f'Histórico de Preços de {nome}', xaxis_title='Data', yaxis_title='Preço')
+    for nome, valores in produtos.items():
+        fig = go.Figure(data=[go.Scatter(
+            x=valores['datas'],
+            y=valores['precos'],
+            mode='lines+markers',
+            name=nome
+        )])
+        fig.update_layout(title=f'Histórico de Preços de {nome}', xaxis_title='Data', yaxis_title='Preço (R$)')
         graficos_html[nome] = plot(fig, output_type='div')
 
     return render_template('graficos.html', graficos_html=graficos_html)
@@ -325,6 +340,16 @@ def graficos_pesquisa():
         graficos_html[nome] = plot(fig, output_type='div')
 
     return render_template('graficos_pesquisa.html', graficos_html=graficos_html)
+
+@app.route('/iniciar_timer', methods=['POST'])
+@login_required
+def iniciar_timer():
+    try:
+        subprocess.Popen(['python', 'timer.py'])
+        flash('Timer iniciado com sucesso!', 'success')
+    except Exception as e:
+        flash(f'Erro ao iniciar o timer: {e}', 'danger')
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=True)
