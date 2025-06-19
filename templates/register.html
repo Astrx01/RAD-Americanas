@@ -11,6 +11,11 @@
             <label for="password" class="form-label">Senha:</label>
             <input type="password" id="password" name="password" class="form-control" required>
         </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="text" id="email" name="email" class="form-control" required>
+        </div>
         <button type="submit" class="btn btn-primary">Cadastrar</button>
     </form>
     <p>Já tem uma conta? <a href="{{ url_for('login') }}">Faça login</a></p>

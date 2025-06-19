@@ -13,6 +13,7 @@
                 <a class="btn btn-light me-2" href="{{ url_for('adicionar_produto') }}">Adicionar Produto</a>
                 <a class="btn btn-light me-2" href="{{ url_for('listar_produtos') }}">Produtos Monitorados</a>
                 <a class="btn btn-light me-2" href="{{ url_for('relatorio') }}">Relatório de Preços</a>
+                 
 
                 {% if session['username'] %}
                     <span class="text-light me-2">
@@ -40,5 +41,7 @@
         {% block content %}{% endblock %}
     </div>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    
+    
 </body>
 </html>

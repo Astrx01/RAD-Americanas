@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Relatório de Gráficos</h2>
+    {% if graficos_html %}
+        {% for nome, grafico in graficos_html.items() %}
+            <h3>{{ nome }}</h3>
+            {{ grafico|safe }}
+        {% endfor %}
+    {% else %}
+        <p>Nenhum dado disponível para gerar gráficos.</p>
+    {% endif %}
+{% endblock %}

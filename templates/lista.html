@@ -8,34 +8,44 @@
     {% block content %}
     <h2 class="mb-4">Produtos Monitorados</h2>
     <a class="btn btn-light me-2" href="{{ url_for('listar_produtos') }}">Produtos Monitorados</a>
-    <table class="table table-bordered table-striped">
+  <table class="table">
         <thead>
             <tr>
                 <th>Nome</th>
                 <th>URL</th>
+                <th>Preço</th>
                 <th>Preço Desejado</th>
-                <th>E-mail</th>
-                <th>Última Consulta</th>
-                <th>Excluir</th>
+                <th>Email</th>
+                <th>Data</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
             {% for produto in produtos %}
             <tr>
-                <td>{{ produto[0] }}</td>
-                <td><a href="{{ produto[1] }}" target="_blank">{{ produto[1] }}</a></td>
-                <td>R$ {{ "%.2f"|format(produto[2]) }}</td>
+                <td>{{ produto[1] }}</td>
+                <td><a href="{{ produto[2] }}" target="_blank">Link</a></td>
+                <td>
+                    {% if produto[2] is number %}
+                        R$ {{ "%.2f"|format(produto[2]) }}
+                    {% else %}
+                        Valor Inválido
+                    {% endif %}
+                </td>
                 <td>{{ produto[3] }}</td>
                 <td>{{ produto[4] }}</td>
+                <td>{{ produto[5] }}</td>
                 <td>
-                    <form action="{{ url_for('deletar_produto', nome=produto[0]) }}" method="post" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir</button>
+                    <a href="{{ url_for('editar_produto', produto_id=produto[0]) }}" class="btn btn-sm btn-primary">Editar</a>
+                    <form action="{{ url_for('deletar_produto', nome=produto[1]) }}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-sm btn-danger">Deletar</button>
                     </form>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    {% endblock %}
+    <a href="{{ url_for('adicionar_produto') }}" class="btn btn-primary">Adicionar Produto</a>
+{% endblock %}
 </body>
 </html>

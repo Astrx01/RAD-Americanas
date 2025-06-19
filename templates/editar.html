@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Editar Produto</h2>
+    <form action="{{ url_for('atualizar_produto', produto_id=produto[0]) }}" method="post">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome:</label>
+            <input type="text" id="nome" name="nome" class="form-control" value="{{ produto[1] }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="url" class="form-label">URL:</label>
+            <input type="url" id="url" name="url" class="form-control" value="{{ produto[2] }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="preco_desejado" class="form-label">Preço Desejado:</label>
+            <input type="number" id="preco_desejado" name="preco_desejado" class="form-control" value="{{ produto[3] }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ produto[4] }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Atualizar</button>
+        <a href="{{ url_for('listar_produtos') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock %}
