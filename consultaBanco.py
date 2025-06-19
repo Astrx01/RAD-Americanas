@@ -1,3 +1,9 @@
+# Grupo Ciência da Computação - ESTACIO
+# Alunos:
+# Erick do Carmo Araujo
+# Edson Ramos Freire
+# Fabio Henrique Barros da Silva Filho
+
 import sqlite3
 
 # Caminho para o banco de dados

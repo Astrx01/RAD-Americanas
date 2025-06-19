@@ -34,7 +34,7 @@ def verificar_precos():
         except Exception as e:
             print(f"Erro ao verificar {nome}: {e}")
 
-schedule.every(5).minutes.do(verificar_precos)
+schedule.every(6).hours.do(verificar_precos)
 
 print("Iniciando o monitoramento a cada 6 horas...")
 

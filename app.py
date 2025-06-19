@@ -1,3 +1,9 @@
+# Grupo Ciência da Computação - ESTACIO
+# Alunos:
+# Erick do Carmo Araujo
+# Edson Ramos Freire
+# Fabio Henrique Barros da Silva Filho
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import os
 import sqlite3
